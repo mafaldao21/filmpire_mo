@@ -1,9 +1,19 @@
-import React from 'react';
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  CircularProgress,
+  useMediaQuery,
+  Typography,
+} from '@mui/material';
+import { useSelector } from 'react-redux';
+
+import { useGetMoviesQuery } from '../../services/TMDB';
 
 const Movies = () => {
-  console.log('Movie Information');
-
+  const { data } = useGetMoviesQuery();
+  console.log(data);
   return <div>Movies</div>;
 };
-
 export default Movies;

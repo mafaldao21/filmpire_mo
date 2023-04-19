@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable no-unused-vars */
 import React, { useEffect } from 'react';
 import {
   Divider,
@@ -18,7 +20,7 @@ const demoCategories = [
   { label: 'Action', value: 'action' },
   { label: 'Horror', value: 'horror' },
   { label: 'Animation', value: 'animation' },
-];;
+];
 const categories = [
   { label: 'Popular', value: 'popular' },
   { label: 'Top Rated', value: 'top_rated' },

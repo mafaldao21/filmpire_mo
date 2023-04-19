@@ -19,6 +19,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 
+// eslint-disable-next-line import/no-cycle
 import { Sidebar } from '../index';
 import useStyles from './styles';
 

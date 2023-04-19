@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 export { default as Actors } from './Actors/Actors';
 export { default as MovieInformation } from './MovieInformation/MovieInformation';
 export { default as Profile } from './Profile/Profile';
