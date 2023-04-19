@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable import/no-extraneous-dependencies */
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AppBar,
   IconButton,
@@ -19,6 +19,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 
+import { Sidebar } from '../index';
 import useStyles from './styles';
 
 const NavBar = () => {
@@ -26,6 +27,8 @@ const NavBar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery('(max-width: 600px');
   const isAuthenticated = true;
+
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <>
@@ -36,7 +39,7 @@ const NavBar = () => {
               color="inherit"
               edge="start"
               style={{ outline: 'none' }}
-              onClick={() => {}}
+              onClick={() => setMobileOpen((prevMobileOpen) => !prevMobileOpen)}
               className={classes.menuButton}
             >
               <Menu />
@@ -78,6 +81,31 @@ const NavBar = () => {
           {isMobile && 'Search...'}
         </Toolbar>
       </AppBar>
+      <div>
+        <nav className={classes.drawer}>
+          {isMobile ? (
+            <Drawer
+              variant="temporary"
+              anchor="right"
+              open={mobileOpen}
+              onClose={() => setMobileOpen((prevMobileOpen) => !prevMobileOpen)}
+              className={classes.drawerBackground}
+              classes={{ paper: classes.drawerPaper }}
+              ModalProps={{ keepMounted: true }}
+            >
+              <Sidebar setMobileOpen={setMobileOpen} />
+            </Drawer>
+          ) : (
+            <Drawer
+              classes={{ paper: classes.drawerPaper }}
+              variant="permanent"
+              open
+            >
+              <Sidebar setMobileOpen={setMobileOpen} />
+            </Drawer>
+          )}
+        </nav>
+      </div>
     </>
   );
 };
