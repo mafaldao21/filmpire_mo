@@ -37,7 +37,7 @@ const Sidebar = ({ setMobileOpen }) => {
   const { data, isFetching } = useGetGenresQuery();
   const dispatch = useDispatch();
   const { genreIdOrCategoryName } = useSelector(
-    (state) => state.currentGenreOrCategory,
+    (state) => state.currentGenreOrCategory
   );
 
   return (
@@ -51,7 +51,11 @@ const Sidebar = ({ setMobileOpen }) => {
       <List>
         <ListSubheader>Categories</ListSubheader>
         {categories.map(({ label, value }) => (
-          <Link key={value} className={classes.links} to="/">
+          <Link
+            key={value}
+            className={classes.links}
+            to="/"
+          >
             <ListItem
               onClick={() => dispatch(selectGenreOrCategory(value))}
               button

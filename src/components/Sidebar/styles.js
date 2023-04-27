@@ -7,6 +7,7 @@ export default makeStyles((theme) => ({
     flexDirection: 'column',
     justifyContent: 'center',
     padding: '10% 0',
+    textDecoration: 'none !important',
   },
   image: {
     width: '70%',
