@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Modal,
   Typography,
@@ -39,12 +39,12 @@ const MovieInformation = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { data, isFetching, error } = useGetMovieQuery(id);
+  const [open, setOpen] = useState(false);
 
-  const { data: recommendations, isFetching: isFetchingRecommendations } =
-    useGetReccomendationsQuery({
-      list: '/recommendations',
-      id: id,
-    });
+  const { data: recommendations, isFetching: isFetchingRecommendations } = useGetReccomendationsQuery({
+    list: '/recommendations',
+    id,
+  });
 
   const isMovieFavorited = true;
   const isMovieWatchlisted = true;
@@ -104,7 +104,7 @@ const MovieInformation = () => {
           </Typography>
         </Grid>
         <Grid item className={classes.genresContainer}>
-          {data?.genres?.map((genre, i) => (
+          {data?.genres?.map((genre) => (
             <Link
               key={genre.name}
               className={classes.links}
@@ -132,33 +132,32 @@ const MovieInformation = () => {
           Top Cast
         </Typography>
         <Grid item container spacing={2}>
-          {data &&
-            data.credits?.cast
+          {data
+            && data.credits?.cast
               ?.map(
-                (character, i) =>
-                  character.profile_path && (
-                    <Grid
-                      key={i}
-                      item
-                      xs={4}
-                      md={2}
-                      component={Link}
-                      to={`/actors/${character.id}`}
-                      style={{ textDecoration: 'none' }}
-                    >
-                      <img
-                        className={classes.castImage}
-                        src={`https://image.tmdb.org/t/p/w500/${character.profile_path}`}
-                        alt={character.name}
-                      />
-                      <Typography color="textPrimary">
-                        {character?.name}
-                      </Typography>
-                      <Typography color="textSecondary">
-                        {character?.character.split('/')[0]}
-                      </Typography>
-                    </Grid>
-                  )
+                (character, i) => character.profile_path && (
+                <Grid
+                  key={i}
+                  item
+                  xs={4}
+                  md={2}
+                  component={Link}
+                  to={`/actors/${character.id}`}
+                  style={{ textDecoration: 'none' }}
+                >
+                  <img
+                    className={classes.castImage}
+                    src={`https://image.tmdb.org/t/p/w500/${character.profile_path}`}
+                    alt={character.name}
+                  />
+                  <Typography color="textPrimary">
+                    {character?.name}
+                  </Typography>
+                  <Typography color="textSecondary">
+                    {character?.character.split('/')[0]}
+                  </Typography>
+                </Grid>
+                ),
               )
               .slice(0, 6)}
         </Grid>
@@ -182,7 +181,7 @@ const MovieInformation = () => {
                 >
                   IMDB
                 </Button>
-                <Button onClick={() => {}} href="#" endIcon={<Theaters />}>
+                <Button onClick={() => setOpen(true)} href="#" endIcon={<Theaters />}>
                   Trailer
                 </Button>
               </ButtonGroup>
@@ -232,6 +231,23 @@ const MovieInformation = () => {
           <Box>Sorry, nothing was found.</Box>
         )}
       </Box>
+      <Modal
+        closeAfterTransition
+        className={classes.modal}
+        open={open}
+        onClose={() => setOpen(false)}
+      >
+        {data?.videos?.results.length > 0 && (
+          <iframe
+            autoPlay
+            className={classes.video}
+            frameBorder="0"
+            title="Trailer"
+            src={`https://www.youtube.com/embed/${data.videos.results[0].key}`}
+            allow="autoplay"
+          />
+        )}
+      </Modal>
     </Grid>
   );
 };

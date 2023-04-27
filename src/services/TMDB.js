@@ -23,15 +23,15 @@ export const tmdbApi = createApi({
 
         // Get by category
         if (
-          genreIdOrCategoryName &&
-          typeof genreIdOrCategoryName === 'string'
+          genreIdOrCategoryName
+          && typeof genreIdOrCategoryName === 'string'
         ) {
           return `/movie/${genreIdOrCategoryName}?page=${page}&api_key=${tmbdApiKey}`;
         }
         // Get by genre
         if (
-          genreIdOrCategoryName &&
-          typeof genreIdOrCategoryName === 'number'
+          genreIdOrCategoryName
+          && typeof genreIdOrCategoryName === 'number'
         ) {
           return `discover/movie?with_genres=${genreIdOrCategoryName}&page=${page}&api_key=${tmbdApiKey}`;
         }
@@ -41,8 +41,7 @@ export const tmdbApi = createApi({
     }),
     // Get movie
     getMovie: builder.query({
-      query: (id) =>
-        `movie/${id}?append_to_response=videos,credits&api_key=${tmbdApiKey}`,
+      query: (id) => `movie/${id}?append_to_response=videos,credits&api_key=${tmbdApiKey}`,
     }),
     // Get user specific lists
     getReccomendations: builder.query({
@@ -51,5 +50,4 @@ export const tmdbApi = createApi({
   }),
 });
 
-export const { useGetMoviesQuery, useGetGenresQuery, useGetMovieQuery, useGetReccomendationsQuery } =
-  tmdbApi;
+export const { useGetMoviesQuery, useGetGenresQuery, useGetMovieQuery, useGetReccomendationsQuery } = tmdbApi;
