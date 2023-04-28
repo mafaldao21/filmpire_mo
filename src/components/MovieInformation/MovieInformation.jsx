@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Modal,
   Typography,
@@ -26,6 +26,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import {
+  useGetListQuery,
   useGetMovieQuery,
   useGetReccomendationsQuery,
 } from '../../services/TMDB';
@@ -33,25 +34,72 @@ import useStyles from './styles';
 import genreIcons from '../../assets/genres';
 import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
 import MovieList from '../MovieList/MovieList';
+import { userSelector } from '../../features/auth';
 
 const MovieInformation = () => {
+  const { user } = useSelector(userSelector);
   const { id } = useParams();
   const classes = useStyles();
   const dispatch = useDispatch();
   const { data, isFetching, error } = useGetMovieQuery(id);
   const [open, setOpen] = useState(false);
 
-  const { data: recommendations, isFetching: isFetchingRecommendations } = useGetReccomendationsQuery({
-    list: '/recommendations',
-    id,
+  const { data: recommendations, isFetching: isFetchingRecommendations } =
+    useGetReccomendationsQuery({
+      list: '/recommendations',
+      id,
+    });
+
+  const { data: favoriteMovies } = useGetListQuery({
+    listName: 'favorite/movies',
+    accountId: user.id,
+    sessionId: localStorage.getItem('session_id'),
+    page: 1,
   });
 
-  const isMovieFavorited = true;
-  const isMovieWatchlisted = true;
+  const { data: watchlistMovies } = useGetListQuery({
+    listName: 'watchlist/movies',
+    accountId: user.id,
+    sessionId: localStorage.getItem('session_id'),
+    page: 1,
+  });
 
-  const addToFavorites = () => {};
+  const [isMovieFavorited, setIsMovieFavorited] = useState(false);
+  const [isMovieWatchlisted, setIsMovieWatchlisted] = useState(false);
 
-  const addToWatchList = () => {};
+  useEffect(() => {
+    setIsMovieFavorited(
+      !!favoriteMovies?.results?.find((movie) => movie?.id === data?.id),
+    );
+  }, [favoriteMovies, data]);
+
+  useEffect(() => {
+    setIsMovieWatchlisted(
+      !!watchlistMovies?.results?.find((movie) => movie?.id === data?.id),
+    );
+  }, [watchlistMovies, data]);
+
+  const addToFavorites = async () => {
+    await axios.post(
+      `https://api.themoviedb.org/3/account/${user.id}/favorite?api_key=${
+        process.env.REACT_APP_TMDB_KEY
+      }&session_id=${localStorage.getItem('session_id')}`,
+      { media_type: 'movie', media_id: id, favorite: !isMovieFavorited },
+    );
+
+    setIsMovieFavorited((prev) => !prev);
+  };
+
+  const addToWatchList = async () => {
+    await axios.post(
+      `https://api.themoviedb.org/3/account/${user.id}/watchlist?api_key=${
+        process.env.REACT_APP_TMDB_KEY
+      }&session_id=${localStorage.getItem('session_id')}`,
+      { media_type: 'movie', media_id: id, watchlist: !isMovieWatchlisted },
+    );
+
+    setIsMovieWatchlisted((prev) => !prev);
+  };
 
   if (isFetching) {
     return (
@@ -129,32 +177,33 @@ const MovieInformation = () => {
           Top Cast
         </Typography>
         <Grid item container spacing={2}>
-          {data
-            && data.credits?.cast
+          {data &&
+            data.credits?.cast
               ?.map(
-                (character, i) => character.profile_path && (
-                <Grid
-                  key={i}
-                  item
-                  xs={4}
-                  md={2}
-                  component={Link}
-                  to={`/actors/${character.id}`}
-                  style={{ textDecoration: 'none' }}
-                >
-                  <img
-                    className={classes.castImage}
-                    src={`https://image.tmdb.org/t/p/w500/${character.profile_path}`}
-                    alt={character.name}
-                  />
-                  <Typography color="textPrimary">
-                    {character?.name}
-                  </Typography>
-                  <Typography color="textSecondary">
-                    {character?.character.split('/')[0]}
-                  </Typography>
-                </Grid>
-                ),
+                (character, i) =>
+                  character.profile_path && (
+                    <Grid
+                      key={i}
+                      item
+                      xs={4}
+                      md={2}
+                      component={Link}
+                      to={`/actors/${character.id}`}
+                      style={{ textDecoration: 'none' }}
+                    >
+                      <img
+                        className={classes.castImage}
+                        src={`https://image.tmdb.org/t/p/w500/${character.profile_path}`}
+                        alt={character.name}
+                      />
+                      <Typography color="textPrimary">
+                        {character?.name}
+                      </Typography>
+                      <Typography color="textSecondary">
+                        {character?.character.split('/')[0]}
+                      </Typography>
+                    </Grid>
+                  )
               )
               .slice(0, 6)}
         </Grid>
@@ -178,7 +227,11 @@ const MovieInformation = () => {
                 >
                   IMDB
                 </Button>
-                <Button onClick={() => setOpen(true)} href="#" endIcon={<Theaters />}>
+                <Button
+                  onClick={() => setOpen(true)}
+                  href="#"
+                  endIcon={<Theaters />}
+                >
                   Trailer
                 </Button>
               </ButtonGroup>
