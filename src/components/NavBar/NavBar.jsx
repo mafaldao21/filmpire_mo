@@ -1,6 +1,7 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   AppBar,
   IconButton,
@@ -25,6 +26,7 @@ import { Search, Sidebar } from '../index';
 import useStyles from './styles';
 import { fetchToken, createSessionId, moviesApi } from '../../utils';
 import { setUser, userSelector } from '../../features/auth';
+import { ColorModeContext } from '../../utils/ToggleColorMode';
 
 const NavBar = () => {
   const { isAuthenticated, user } = useSelector(userSelector);
@@ -34,6 +36,8 @@ const NavBar = () => {
   const isMobile = useMediaQuery('(max-width: 600px');
   const token = localStorage.getItem('request_token');
   const sessionIdFromLocalStorage = localStorage.getItem('session_id');
+
+  const colorMode = useContext(ColorModeContext);
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -76,7 +80,7 @@ const NavBar = () => {
             color="inherit"
             edge="start"
             sx={{ ml: 1 }}
-            onClick={() => {}}
+            onClick={colorMode.toggleColorMode}
           >
             {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
           </IconButton>

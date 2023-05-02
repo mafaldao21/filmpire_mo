@@ -11,12 +11,13 @@ export default makeStyles((theme) => ({
   },
   image: {
     width: '70%',
+    alignSelf: 'center',
   },
   links: {
     color: theme.palette.text.primary,
     textDecoration: 'none !important',
   },
   genreImage: {
-    filter: theme.palette.mode === 'dark' ? 'dark' : 'invert(1)',
+    filter: theme.palette.mode === 'light' ? 'dark' : 'invert(1)',
   },
 }));

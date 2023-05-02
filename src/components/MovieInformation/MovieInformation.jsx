@@ -16,11 +16,9 @@ import {
   Language,
   PlusOne,
   Favorite,
-  FacoriteBorderOutlined,
   Remove,
   ArrowBack,
   FavoriteBorderOutlined,
-  FavoriteBorder,
 } from '@mui/icons-material';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -44,11 +42,10 @@ const MovieInformation = () => {
   const { data, isFetching, error } = useGetMovieQuery(id);
   const [open, setOpen] = useState(false);
 
-  const { data: recommendations, isFetching: isFetchingRecommendations } =
-    useGetReccomendationsQuery({
-      list: '/recommendations',
-      id,
-    });
+  const { data: recommendations, isFetching: isFetchingRecommendations } = useGetReccomendationsQuery({
+    list: '/recommendations',
+    id,
+  });
 
   const { data: favoriteMovies } = useGetListQuery({
     listName: 'favorite/movies',
@@ -145,7 +142,7 @@ const MovieInformation = () => {
             </Typography>
           </Box>
           <Typography variant="h6" align="center" gutterBottom>
-            {data?.runtime}min | Language: ${data?.spoken_languages[0].name}
+            {data?.runtime}min | Language: {data?.spoken_languages[0].name}
           </Typography>
         </Grid>
         <Grid item className={classes.genresContainer}>
@@ -177,33 +174,32 @@ const MovieInformation = () => {
           Top Cast
         </Typography>
         <Grid item container spacing={2}>
-          {data &&
-            data.credits?.cast
+          {data
+            && data.credits?.cast
               ?.map(
-                (character, i) =>
-                  character.profile_path && (
-                    <Grid
-                      key={i}
-                      item
-                      xs={4}
-                      md={2}
-                      component={Link}
-                      to={`/actors/${character.id}`}
-                      style={{ textDecoration: 'none' }}
-                    >
-                      <img
-                        className={classes.castImage}
-                        src={`https://image.tmdb.org/t/p/w500/${character.profile_path}`}
-                        alt={character.name}
-                      />
-                      <Typography color="textPrimary">
-                        {character?.name}
-                      </Typography>
-                      <Typography color="textSecondary">
-                        {character?.character.split('/')[0]}
-                      </Typography>
-                    </Grid>
-                  )
+                (character, i) => character.profile_path && (
+                <Grid
+                  key={i}
+                  item
+                  xs={4}
+                  md={2}
+                  component={Link}
+                  to={`/actors/${character.id}`}
+                  style={{ textDecoration: 'none' }}
+                >
+                  <img
+                    className={classes.castImage}
+                    src={`https://image.tmdb.org/t/p/w500/${character.profile_path}`}
+                    alt={character.name}
+                  />
+                  <Typography color="textPrimary">
+                    {character?.name}
+                  </Typography>
+                  <Typography color="textSecondary">
+                    {character?.character.split('/')[0]}
+                  </Typography>
+                </Grid>
+                ),
               )
               .slice(0, 6)}
         </Grid>
