@@ -104,7 +104,7 @@ const NavBar = () => {
                   style={{ width: 30, height: 30 }}
                   alt="Profile"
                   // eslint-disable-next-line max-len
-                  src="https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.mtsolar.us%2Fwp-content%2Fuploads%2F2020%2F04%2Favatar-placeholder.png&tbnid=gxtQQ6HgDoJ9OM&vet=12ahUKEwiTvpv6r7P-AhXwsCcCHb-zC7wQMygCegUIARDsAQ..i&imgrefurl=https%3A%2F%2Fwww.mtsolar.us%2Fabout-us%2Favatar-placeholder%2F&docid=EoEIg7ItqyQCCM&w=840&h=859&q=avatar%20placeholder%20image&ved=2ahUKEwiTvpv6r7P-AhXwsCcCHb-zC7wQMygCegUIARDsAQ"
+                  src={`https://www.themoviedb.org/t/p/w64_and_h64_face${user?.avatar?.tmdb?.avatar_path}`}
                 />
               </Button>
             )}
